@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Consulta CAA | Alfa Core</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        /* --- VARIÁVEIS DO SEU DASHBOARD CENTRAL --- */
+        :root {
+            --primary: #004587;
+            --accent: #00d4ff;
+            --bg-body: #f8fafc;
+            --navbar-bg: #ffffff;
+            --card-bg: #ffffff;
+            --text-main: #1e293b;
+            --text-muted: #64748b;
+            --border: #e2e8f0;
+            --sidebar-width: 300px;
+            --glass: rgba(0, 0, 0, 0.03);
+        }
+
+        /* Suporte ao Tema Escuro conforme seu Dashboard */
+        [data-theme="dark"] {
+            --bg-body: #060b18;
+            --navbar-bg: rgba(6, 11, 24, 0.9);
+            --card-bg: rgba(255, 255, 255, 0.03);
+            --text-main: #ffffff;
+            --text-muted: #94a3b8;
+            --border: rgba(0, 212, 255, 0.15);
+            --primary: #00d4ff;
+            --glass: rgba(255, 255, 255, 0.05);
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--bg-body);
+            color: var(--text-main);
+            margin: 0;
+            min-height: 100vh;
+            transition: all 0.3s ease;
+            overflow-x: hidden;
+        }
+
+        /* --- Navbar (Estilo Dashboard) --- */
+        .navbar {
+            backdrop-filter: blur(15px);
+            background: var(--navbar-bg);
+            padding: 12px 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--border);
+            position: sticky; top: 0; z-index: 1000;
+        }
+
+        .nav-left { display: flex; align-items: center; gap: 20px; }
+        .hamburger { font-size: 1.2rem; color: var(--text-muted); cursor: pointer; transition: 0.2s; padding: 8px; border-radius: 8px; }
+        .hamburger:hover { background: var(--glass); color: var(--primary); }
+
+        /* --- Sidebar (ESTRUTURA FIEL AO SEU DASHBOARD) --- */
+        .sidebar {
+            position: fixed;
+            top: 0; left: calc(-1 * var(--sidebar-width));
+            width: var(--sidebar-width);
+            height: 100%;
+            background: var(--navbar-bg);
+            z-index: 2000;
+            transition: 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            display: flex;
+            flex-direction: column;
+            box-shadow: 10px 0 30px rgba(0,0,0,0.05);
+        }
+        .sidebar.active { left: 0; }
+
+        .sidebar-header {
+            padding: 20px 25px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--border);
+        }
+        .brand-box { display: flex; align-items: center; gap: 12px; font-weight: 700; color: var(--text-main); }
+        .brand-box img { width: 30px; }
+
+        .user-section { padding: 25px; border-bottom: 1px solid var(--border); }
+        .user-card { display: flex; align-items: center; gap: 15px; }
+        .user-avatar { 
+            width: 45px; height: 45px; background: var(--glass); border-radius: 10px; 
+            display: flex; align-items: center; justify-content: center; color: var(--primary); font-size: 1.2rem;
+        }
+        .user-details strong { display: block; font-size: 0.95rem; }
+        .user-details span { font-size: 0.75rem; color: var(--text-muted); word-break: break-all; }
+
+        /* --- Ajuste das Categorias no Menu --- */
+        .sidebar-menu { flex-grow: 1; padding: 20px; overflow-y: auto; }
+        
+        .menu-category {
+            font-size: 0.7rem;
+            font-weight: 800;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin: 20px 0 10px 10px;
+        }
+
+        .menu-link {
+            display: flex; align-items: center; gap: 12px;
+            padding: 12px 15px; border-radius: 10px;
+            text-decoration: none; color: var(--text-main);
+            font-size: 0.9rem; transition: 0.2s; margin-bottom: 5px;
+        }
+        .menu-link:hover { background: var(--glass); color: var(--primary); }
+        .menu-link.active { background: var(--primary); color: #fff; }
+
+        .sidebar-footer { padding: 20px; border-top: 1px solid var(--border); }
+        .theme-switch-btn {
+            width: 100%; padding: 12px; border-radius: 10px;
+            background: var(--glass); border: 1px solid var(--border);
+            color: var(--text-main); cursor: pointer;
+            display: flex; justify-content: space-between; align-items: center; font-size: 0.85rem;
+        }
+
+        .overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.4); backdrop-filter: blur(4px); display: none; z-index: 1900; }
+        .overlay.active { display: block; }
+
+        /* --- Conteúdo da Página --- */
+        .container { max-width: 1200px; margin: 40px auto; padding: 0 40px; }
+        .page-header h1 { font-size: 2.2rem; font-weight: 800; color: var(--primary); margin: 0; }
+        .page-header p { color: var(--text-muted); margin-bottom: 35px; }
+
+        .metrics-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 20px; margin-bottom: 40px; }
+        .m-card {
+            background: var(--card-bg); border-radius: 20px; padding: 25px;
+            border: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center;
+            transition: 0.3s;
+        }
+        .m-card:hover { transform: translateY(-5px); border-color: var(--primary); }
+        .m-card.blue { border-left: 5px solid #004587; }
+        .m-card.orange { border-left: 5px solid #f97316; }
+        .m-card.green { border-left: 5px solid #22c55e; }
+        .m-card.purple { border-left: 5px solid #8b5cf6; }
+        
+        .main-card { background: var(--card-bg); border-radius: 20px; border: 1px solid var(--border); padding: 30px; }
+        
+        .search-input {
+            width: 100%; max-width: 380px; padding: 12px 40px;
+            border-radius: 12px; border: 1px solid var(--border);
+            background: var(--bg-body); color: var(--text-main); outline: none;
+        }
+        
+        .data-item {
+            padding: 20px; background: var(--glass); border-radius: 15px;
+            margin-bottom: 12px; border: 1px solid transparent; transition: 0.2s;
+        }
+        .data-item:hover { border-color: var(--primary); background: var(--card-bg); }
+    </style>
+</head>
+<body data-theme="light">
+
+    <div class="overlay" id="overlay" onclick="toggleMenu()"></div>
+
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <div class="brand-box">
+                <img src="https://alfaunipac.com.br/wp-content/uploads/2023/05/cropped-logo-alfa-unipac-32x32.png" alt="Logo">
+                <span>Menu de Acesso</span>
+            </div>
+            <i class="fa-solid fa-xmark hamburger" onclick="toggleMenu()"></i>
+        </div>
+
+        <div class="user-section">
+            <div class="user-card">
+                <div class="user-avatar"><i class="fa-regular fa-user"></i></div>
+                <div class="user-details">
+                    <strong>Administrador</strong>
+                    <span>gabrielpereiraferrari2020@gmail.com</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="sidebar-menu">
+            <a href="index.html" class="menu-link active"><i class="fa-solid fa-chart-line"></i> Dashboard</a>
+
+            <div class="menu-category">Diplomas</div>
+            <a href="cadastrar-diploma.html" class="menu-link"><i class="fa-solid fa-plus-circle"></i> Cadastrar Diploma</a>
+            <a href="buscar-diploma.html" class="menu-link"><i class="fa-solid fa-search"></i> Buscar Diploma</a>
+
+            <div class="menu-category">Documentos</div>
+            <a href="cadastrar-doc-pendente.html" class="menu-link"><i class="fa-solid fa-file-signature"></i> Cadastrar Doc. Pendente</a>
+            <a href="buscar-doc-pendente.html" class="menu-link"><i class="fa-solid fa-file-magnifying-glass"></i> Buscar Doc. Pendente</a>
+            
+            <hr style="border: 0; border-top: 1px solid var(--border); margin: 20px 0;">
+            <a href="../dashboard.html" class="menu-link" style="opacity: 0.7;"><i class="fa-solid fa-arrow-left"></i> Voltar ao Core</a>
+        </div>
+
+        <div class="sidebar-footer">
+            <button class="theme-switch-btn" onclick="toggleTheme()">
+                <span><i class="fa-solid fa-circle-half-stroke"></i> Exibição</span>
+                <strong id="theme-label">Claro</strong>
+            </button>
+        </div>
+    </aside>
+
+    <nav class="navbar">
+        <div class="nav-left">
+            <i class="fa-solid fa-bars-staggered hamburger" onclick="toggleMenu()"></i>
+            <div style="font-weight: 800; font-size: 1.1rem; color: var(--primary); letter-spacing: 0.5px;">CONSULTA CAA</div>
+        </div>
+        <div class="status-badge">SISTEMA ONLINE</div>
+    </nav>
+
+    <div class="container">
+        <header class="page-header">
+            <h1>Visão Geral</h1>
+            <p>Métricas e registros do Módulo Acadêmico.</p>
+        </header>
+
+        <div class="metrics-grid">
+            <div class="m-card blue">
+                <div><span>Alunos</span><h2>1.240</h2></div>
+                <i class="fa-solid fa-users" style="font-size: 2rem; opacity: 0.2;"></i>
+            </div>
+            <div class="m-card orange">
+                <div><span>Retiradas</span><h2>100</h2></div>
+                <i class="fa-solid fa-box-open" style="font-size: 2rem; opacity: 0.2;"></i>
+            </div>
+            <div class="m-card green">
+                <div><span>Doc. Ok</span><h2>20</h2></div>
+                <i class="fa-solid fa-check-double" style="font-size: 2rem; opacity: 0.2;"></i>
+            </div>
+            <div class="m-card purple">
+                <div><span>Pendentes</span><h2>50</h2></div>
+                <i class="fa-solid fa-clock" style="font-size: 2rem; opacity: 0.2;"></i>
+            </div>
+        </div>
+
+        <div class="main-card">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px;">
+                <div>
+                    <h3 style="margin: 0; color: var(--primary);">Registro INCom</h3>
+                    <p style="margin: 5px 0 0; font-size: 0.85rem; color: var(--text-muted);">Últimos processos acadêmicos</p>
+                </div>
+                <div style="position: relative;">
+                    <i class="fa-solid fa-magnifying-glass" style="position: absolute; left: 15px; top: 15px; color: var(--text-muted);"></i>
+                    <input type="text" class="search-input" placeholder="Buscar registros...">
+                </div>
+            </div>
+
+            <div id="listaRegistros">
+                <div class="data-item">
+                    <div style="display: grid; grid-template-columns: 2fr 1fr 1fr 1fr 50px; align-items: center;">
+                        <div style="font-weight: 700;">Gabriel Pereira Ferrari</div>
+                        <div style="font-family: monospace;">202400158</div>
+                        <div>2026/1</div>
+                        <div><span style="background: #f0fdf4; color: #16a34a; padding: 5px 12px; border-radius: 8px; font-size: 0.75rem; font-weight: 800;">CONCLUÍDO</span></div>
+                        <button style="background:none; border:none; color:var(--primary); cursor:pointer;"><i class="fa-solid fa-eye"></i></button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function toggleMenu() {
+            document.getElementById('sidebar').classList.toggle('active');
+            document.getElementById('overlay').classList.toggle('active');
+        }
+
+        function toggleTheme() {
+            const body = document.body;
+            const label = document.getElementById('theme-label');
+            const isDark = body.getAttribute('data-theme') === 'dark';
+            body.setAttribute('data-theme', isDark ? 'light' : 'dark');
+            label.innerText = isDark ? 'Claro' : 'Escuro';
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - Alfa UNIPAC</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        :root { --primary: #004587; --bg: #f8fafc; --text: #1e293b; }
+        body { font-family: 'Inter', sans-serif; background: var(--bg); display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 100vh; margin: 0; color: var(--text); }
+        
+        .header-logo { text-align: center; margin-bottom: 2rem; }
+        .header-logo img { width: 80px; margin-bottom: 10px; border-radius: 8px; border: 1px solid #ddd; }
+        .header-logo h1 { font-size: 24px; margin: 0; color: #0f172a; }
+        .header-logo p { font-size: 14px; color: #64748b; margin-top: 5px; }
+
+        .login-card { background: white; padding: 2rem; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.05); width: 100%; max-width: 400px; box-sizing: border-box; }
+        .login-card h2 { text-align: center; margin-top: 0; font-size: 20px; }
+        .login-card p.subtitle { text-align: center; color: #64748b; font-size: 14px; margin-bottom: 1.5rem; }
+
+        .input-group { margin-bottom: 1rem; position: relative; }
+        .input-group label { display: block; font-size: 13px; font-weight: 600; margin-bottom: 5px; color: #334155; }
+        .input-group i { position: absolute; left: 12px; top: 35px; color: #94a3b8; }
+        .input-group input { width: 100%; padding: 12px 12px 12px 40px; border: 1px solid #e2e8f0; border-radius: 8px; background: #f8fafc; box-sizing: border-box; transition: 0.2s; }
+        .input-group input:focus { outline: none; border-color: var(--primary); background: white; }
+
+        .remember-me { display: flex; align-items: center; gap: 8px; font-size: 13px; color: #64748b; margin-bottom: 1.5rem; }
+        
+        .btn-login { width: 100%; padding: 12px; background: var(--primary); color: white; border: none; border-radius: 8px; font-weight: 600; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 10px; font-size: 15px; }
+        .btn-login:hover { background: #003366; }
+
+        .footer-text { text-align: center; font-size: 11px; color: #94a3b8; margin-top: 1.5rem; line-height: 1.4; }
+    </style>
+</head>
+<body>
+
+    <div class="header-logo">
+        <img src="https://imgs.search.brave.com/cQOpyXu2EvdeuglHIcWVTLTbd5WDhgO9Iqc0RJVlXTQ/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9zYWdh/dS5hbGZhdW5pcGFj/LmNvbS5icjo2NjUv/aW1hZ2VzL2xvYWRp/bmcucG5n" alt="Logo">
+        <h1>Setor de Diplomas - AlfaUnipac</h1>
+        <p>Centro Universitário AlfaUnipac</p>
+    </div>
+
+    <div class="login-card">
+        <h2>Acesso ao Sistema</h2>
+        <p class="subtitle">Entre com suas credenciais para acessar</p>
+
+        <div class="input-group">
+            <label>Email</label>
+            <i class="fa-regular fa-envelope"></i>
+            <input type="email" id="email" placeholder="seu@email.com">
+        </div>
+
+        <div class="input-group">
+            <label>Senha</label>
+            <i class="fa-solid fa-lock"></i>
+            <input type="password" id="senha" placeholder="Digite sua senha">
+        </div>
+
+        <div class="remember-me">
+            <input type="checkbox" id="lembrar">
+            <label for="lembrar">Lembrar minhas credenciais</label>
+        </div>
+
+        <button class="btn-login" onclick="executarLogin()">
+            <i class="fa-solid fa-arrow-right-to-bracket"></i> Entrar no Sistema
+        </button>
+
+        <div class="footer-text">
+            Para criar uma conta, entre em contato com o administrador do sistema.
+        </div>
+    </div>
+
+    <script>
+        async function executarLogin() {
+            const usuario = document.getElementById('email').value;
+            const senha = document.getElementById('senha').value;
+
+            // Note: Ajustamos o controller antes para aceitar 'admin' / 'admin123'
+            // Mas aqui você pode digitar qualquer coisa para testar o erro ou admin para entrar.
+            const response = await fetch('/api/auth/login', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ usuario, senha })
+            });
+
+            const data = await response.json();
+            if (data.success) {
+                window.location.href = data.redirect;
+            } else {
+                alert(data.message);
+            }
+        }
+    </script>
+</body>
+</html>

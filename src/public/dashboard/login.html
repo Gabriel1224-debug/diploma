@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Acesso ao Sistema - Alfa UNIPAC</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        body {
+            margin: 0;
+            font-family: 'Segoe UI', sans-serif;
+            background: #f8fafc;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+        }
+
+        .header-top { text-align: center; margin-bottom: 30px; }
+        .logo-main { width: 80px; height: 80px; object-fit: contain; margin-bottom: 10px; border-radius: 12px; box-shadow: 0 4px 10px rgba(0,0,0,0.05); }
+        .header-top h1 { color: #003366; margin: 0; font-size: 28px; }
+        .header-top p { color: #64748b; margin: 5px 0 0; }
+
+        .login-container {
+            background: white;
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.05);
+            width: 100%;
+            max-width: 420px;
+            box-sizing: border-box;
+        }
+
+        .login-container h2 { text-align: center; color: #1e293b; margin-top: 0; margin-bottom: 10px; }
+        .login-container .subtitle { text-align: center; color: #94a3b8; font-size: 14px; margin-bottom: 30px; }
+
+        .input-group { margin-bottom: 20px; }
+        .input-group label { display: block; font-size: 14px; font-weight: 600; color: #334155; margin-bottom: 8px; }
+        
+        .input-wrapper { position: relative; }
+        .input-wrapper i { position: absolute; left: 15px; top: 50%; transform: translateY(-50%); color: #94a3b8; }
+        .input-wrapper input {
+            width: 100%;
+            padding: 12px 15px 12px 45px;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            background: #f1f5f9;
+            outline: none;
+            box-sizing: border-box;
+            transition: 0.2s;
+        }
+        .input-wrapper input:focus { border-color: #004587; background: #fff; }
+
+        .options { display: flex; align-items: center; font-size: 13px; color: #64748b; margin-bottom: 25px; }
+        .options input { margin-right: 8px; cursor: pointer; }
+
+        .btn-login {
+            width: 100%;
+            padding: 14px;
+            background: #004587;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            transition: 0.3s;
+        }
+        .btn-login:hover { background: #003366; }
+
+        .footer-text { margin-top: 25px; font-size: 12px; color: #94a3b8; text-align: center; line-height: 1.5; }
+    </style>
+</head>
+<body>
+
+    <div class="header-top">
+        <img src="https://alfaunipac.com.br/wp-content/uploads/2023/05/cropped-logo-alfa-unipac-32x32.png" alt="Logo" class="logo-main">
+        <h1>Sistema Administrativo</h1>
+        <p>Centro Universitário Alfa UNIPAC</p>
+    </div>
+
+    <div class="login-container">
+        <h2>Acesso ao Sistema</h2>
+        <div class="subtitle">Entre com suas credenciais para acessar</div>
+
+        <form onsubmit="handleLogin(event)">
+            <div class="input-group">
+                <label>Email</label>
+                <div class="input-wrapper">
+                    <i class="fa-regular fa-envelope"></i>
+                    <input type="email" placeholder="seu@email.com" required>
+                </div>
+            </div>
+
+            <div class="input-group">
+                <label>Senha</label>
+                <div class="input-wrapper">
+                    <i class="fa-solid fa-lock"></i>
+                    <input type="password" placeholder="Digite sua senha" required>
+                </div>
+            </div>
+
+            <div class="options">
+                <input type="checkbox" id="remember">
+                <label for="remember">Lembrar minhas credenciais</label>
+            </div>
+
+            <button type="submit" class="btn-login">
+                <i class="fa-solid fa-right-to-bracket"></i> Entrar no Sistema
+            </button>
+        </form>
+
+        <div class="footer-text">
+            Para criar uma conta, entre em contato com o administrador do sistema.
+        </div>
+    </div>
+
+    <script>
+        function handleLogin(event) {
+            event.preventDefault();
+            // Redireciona para o dashboard na mesma pasta
+            window.location.href = "dashboard.html";
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CAA - Cadastrar Diploma</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        :root {
+            --primary: #004587;
+            --bg-body: #f8fafc;
+            --sidebar-width: 280px;
+            --text-main: #1e293b;
+            --border: #e2e8f0;
+            --white: #ffffff;
+        }
+
+        body { font-family: 'Inter', sans-serif; margin: 0; display: flex; background: var(--bg-body); color: var(--text-main); }
+
+        /* Sidebar (Mantendo o padrão do módulo) */
+        .sidebar-caa {
+            width: var(--sidebar-width);
+            height: 100vh;
+            background: var(--white);
+            border-right: 1px solid var(--border);
+            display: flex;
+            flex-direction: column;
+            position: fixed;
+        }
+
+        .sidebar-header { padding: 25px; border-bottom: 1px solid var(--border); font-weight: 800; color: var(--primary); }
+
+        .menu-nav { flex-grow: 1; padding: 20px 0; }
+        
+        .menu-item {
+            display: flex; align-items: center; gap: 12px;
+            padding: 15px 25px; text-decoration: none; color: var(--text-main);
+            transition: 0.2s; font-weight: 500;
+        }
+
+        .menu-item:hover { background: rgba(0, 69, 135, 0.05); color: var(--primary); }
+        .menu-item.active { background: var(--primary); color: #fff; }
+
+        /* Área de Conteúdo */
+        .content { margin-left: var(--sidebar-width); padding: 40px; width: 100%; }
+
+        .form-container {
+            background: var(--white);
+            padding: 30px;
+            border-radius: 15px;
+            border: 1px solid var(--border);
+            max-width: 800px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.02);
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .input-group { display: flex; flex-direction: column; gap: 8px; }
+        .input-group label { font-size: 0.85rem; font-weight: 600; color: var(--text-main); }
+        
+        .input-group input, .input-group select {
+            padding: 12px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            background: var(--bg-body);
+            font-family: inherit;
+        }
+
+        .btn-save {
+            grid-column: span 2;
+            background: var(--primary);
+            color: white;
+            padding: 15px;
+            border: none;
+            border-radius: 8px;
+            font-weight: 700;
+            cursor: pointer;
+            margin-top: 10px;
+            transition: 0.3s;
+        }
+
+        .btn-save:hover { opacity: 0.9; transform: translateY(-2px); }
+    </style>
+</head>
+<body>
+
+    <aside class="sidebar-caa">
+        <div class="sidebar-header">MÓDULO CAA</div>
+        <nav class="menu-nav">
+            <a href="index.html" class="menu-item"><i class="fa-solid fa-chart-pie"></i> Dashboard</a>
+            <a href="cadastrar-diploma.html" class="menu-item active"><i class="fa-solid fa-certificate"></i> Cadastrar Diploma</a>
+            <a href="cadastrar-pendencia.html" class="menu-item"><i class="fa-solid fa-file-circle-exclamation"></i> Cadastrar Doc. Pendente</a>
+            <a href="consulta-geral.html" class="menu-item"><i class="fa-solid fa-magnifying-glass"></i> Consulta Geral</a>
+        </nav>
+        <div style="padding: 20px; border-top: 1px solid var(--border);">
+            <a href="../dashboard.html" class="menu-item" style="color: var(--text-muted);">
+                <i class="fa-solid fa-house"></i> Início (Alfa Core)
+            </a>
+        </div>
+    </aside>
+
+    <main class="content">
+        <div class="form-container">
+            <h1 style="margin-top: 0; color: var(--primary);"><i class="fa-solid fa-certificate"></i> Registro de Diploma</h1>
+            <p style="color: #64748b;">Insira as informações acadêmicas para emissão e registro.</p>
+            
+            <form id="formDiploma" class="form-grid">
+                <div class="input-group">
+                    <label>NOME COMPLETO DO ALUNO</label>
+                    <input type="text" placeholder="Ex: Gabriel Pereira Ferrari">
+                </div>
+                <div class="input-group">
+                    <label>RA (REGISTRO ACADÊMICO)</label>
+                    <input type="text" placeholder="00000000">
+                </div>
+                <div class="input-group">
+                    <label>CURSO</label>
+                    <select>
+                        <option>Direito</option>
+                        <option>Administração</option>
+                        <option>Enfermagem</option>
+                        <option>Engenharia Civil</option>
+                    </select>
+                </div>
+                <div class="input-group">
+                    <label>DATA DE COLAÇÃO</label>
+                    <input type="date">
+                </div>
+                <div class="input-group">
+                    <label>Nº DO PROCESSO</label>
+                    <input type="text" placeholder="CAA-2026-XXXX">
+                </div>
+                <div class="input-group">
+                    <label>STATUS DA PUBLICAÇÃO</label>
+                    <select>
+                        <option>Aguardando</option>
+                        <option>Enviado p/ D.O.U</option>
+                        <option>Publicado</option>
+                    </select>
+                </div>
+                
+                <button type="submit" class="btn-save">REGISTRAR DIPLOMA</button>
+            </form>
+        </div>
+    </main>
+
+</body>
+</html>
